@@ -11,6 +11,5 @@ test('render port names', () => {
         )
     const portOfLoading = screen.getByText('Copenhagen')
     const portOfDischarge = screen.getByText('Oslo')
-    expect(portOfLoading).toBeInTheDocument()
-    expect(portOfDischarge).toBeInTheDocument()
+    expect(portOfLoading && portOfDischarge).toBeInTheDocument()
   });
