@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
 import styled from '@emotion/styled'
-import React, { useLayoutEffect, useState, useRef } from 'react';
+import React, { useLayoutEffect, useEffect, useState, useRef } from 'react';
 import ShipPin from './ShipPin'
 
 type DotProps = {
@@ -66,17 +66,44 @@ const VoyageProgress: React.FC<Props> = (props) => {
   const [progress, setProgress] = useState(0);
   const unitRef = useRef<HTMLDivElement>(null);
   const shipPinRef = useRef<HTMLDivElement>(null);
+  const intervalId = useRef<null | NodeJS.Timer>(null);
 
-  setInterval(() => {
-    setCurrentTime(new Date().getTime())
-  }, 1000)
+  useEffect(() => {
+    // Check that interval has not been started previously
+    if (!intervalId.current) {
+    // Store intervalId so that this logic is not invoked again after an interval has started
+    intervalId.current = setInterval(() => {
+    setCurrentTime(new Date().getTime());
+    }, 1000);
+    }
+    return () => {
+    
+    // Clear (stop) the interval and unset intervalId when the component mounts
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+    };
+    // This useEffect runs only on component mount
+    // setCurrentTime can be omitted because React state setters do not change
+    // intervalId can be omitted because it does not cause re-render
+    }, []);
 
   const moreFloor = (n:number) => Math.floor (n / 10) * 10 || n
 
-  const calculateProgress = () => {
+  const timeDifference = currentTime - departureTime
+  const voyageLength = arrivalTime - departureTime
+  const percDiffRounded = Math.floor(100 / voyageLength * timeDifference)
+  const percDiffRoundedMore = moreFloor(100 / voyageLength * timeDifference)
+
+  const calculateProgress = () =>  {
     const widthDiff = (shipPinRef.current!.clientWidth - unitRef.current!.clientWidth)
     const pinInitialPosition = widthDiff/2
-    if(departureTime < arrivalTime) {
+      if (departureTime > arrivalTime) {
+        // Let the developer know that they are passing incorrect values,
+        // in the least this error will show up in the logs.
+        throw new Error("Arrival time cannot be before Departure time");
+        }
       if(currentTime <= departureTime) {
         setPosition(-pinInitialPosition)
       } else if (currentTime >= arrivalTime) {
@@ -84,16 +111,11 @@ const VoyageProgress: React.FC<Props> = (props) => {
         setPosition(unit * unitRef.current!.clientWidth -pinInitialPosition)
         setProgress(unit)
       } else if (currentTime > departureTime && currentTime < arrivalTime) {
-        const timeDifference = currentTime - departureTime
-        const voyageLength = arrivalTime - departureTime
-        const percDiffRounded = Math.floor(100 / voyageLength * timeDifference)
-        const percDiffRoundedMore = moreFloor(100 / voyageLength * timeDifference)
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const unit = percDiffRounded / 10
         setPosition(unit * unitRef.current!.clientWidth - pinInitialPosition)
         setProgress(percDiffRoundedMore / 10)
       }
-    }
   }
 
   useLayoutEffect(() => {
