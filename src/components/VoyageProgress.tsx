@@ -134,22 +134,22 @@ const VoyageProgress: React.FC<Props> = (props) => {
       </div>
       <div css={dotsStyle}>
         <div css={portWrapperStyle}>
-        <DotBig isDark/>
+        <DotBig className="dark-dot" isDark />
           <p css={portNameStyle}>{props.portOfLoading}</p>
         </div>
         {(progress >= 1 && progress < 10) && ([[...Array(progress)].map((e, i) => {
-        return <div ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot isDark/></div>
+        return <div ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot className="dark-dot" isDark/></div>
         }), ...[...Array(9-progress)].map((e, i) => {
           return <div ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot/></div>
         })])}
         {progress === 10 && [...Array(9)].map((e, i) => {
-          return <div ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot isDark/></div>
+          return <div className="dark-dot" ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot className="dark-dot" isDark/></div>
         })}
         {progress < 1 && [...Array(9)].map((e, i) => {
           return <div ref={unitRef} key={i} css={{flex: '1 1 0'}}><Dot/></div>
         })}
         <div css={portWrapperStyle}>
-        {progress < 10 ? <DotBig/> : <DotBig isDark/>}
+        {progress < 10 ? <DotBig/> : <DotBig className="dark-dot" isDark/>}
           <p css={portNameStyle}>{props.portOfDischarge}</p>
         </div>
       </div>
