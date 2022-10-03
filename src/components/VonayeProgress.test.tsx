@@ -2,6 +2,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import VoyageProgress from './VoyageProgress'
 
+describe('Voyage Progress component test cases', () => {
+
 test('render port names', () => {
     render(<VoyageProgress   
         portOfLoading="Copenhagen" 
@@ -27,3 +29,4 @@ test('render correct number of blue dots at a given progress', () => {
     expect(darkDots.length / 2).toBe(progress);
   }); 
 
+})
