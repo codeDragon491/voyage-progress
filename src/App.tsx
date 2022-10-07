@@ -1,24 +1,23 @@
+/** @jsxImportSource @emotion/react */
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import VoyageProgress from './components/VoyageProgress';
+import { css } from '@emotion/react'
 
-function App() {
+const largeScreensOnlyStyle = css`
+  display: none;
+  @media (min-width: 1280px) {
+    display: block;
+  }`
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div css={largeScreensOnlyStyle}>
+      <VoyageProgress 
+        portOfLoading="Copenhagen" 
+        portOfDischarge="Oslo"
+        departureTime="Mon, Jul 8 2022 10:00"
+        arrivalTime="Mon, Jul 8 2022 19:00"
+      />
     </div>
   );
 }
