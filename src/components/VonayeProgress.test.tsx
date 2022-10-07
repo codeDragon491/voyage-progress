@@ -16,14 +16,14 @@ it('render port names', () => {
     expect(portOfLoading && portOfDischarge).toBeInTheDocument()
   });
 
-it('render correct number of blue dots at a given progress', () => {
+it('render 10 dark blue dots when progress is 100%', () => {
     const { container } = render(<VoyageProgress   
         portOfLoading="Copenhagen" 
         portOfDischarge="Oslo"
         departureTime="Sat, Oct 1 2022 09:00"
         arrivalTime="Sat, Oct 1 2022 17:00"/>
         )
-    const progress = 10
+    const progress = 100 / 10
     const darkDots = container.getElementsByClassName("dark-dot");
     // needs to be divided by 2 because componnet renders twice
     expect(darkDots.length / 2).toBe(progress);
